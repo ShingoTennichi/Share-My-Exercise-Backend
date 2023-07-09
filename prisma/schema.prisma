@@ -17,10 +17,10 @@ model User {
   firstName   String @db.String(25)
   lastName    String @db.String(25)
   email       String @unique
-  password    String @db.String(25)
+  password    String @db.String(60)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
-  deletedAt   DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
   followeeId  Follow[] @relation("followeeId")
   followingId   Follow[] @relation("followingId")
   postAuthorId  Post[] @relation("postAuthorId")
@@ -35,8 +35,8 @@ model Follow {
   followingId Int @unique
   status Boolean
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  deletedAt DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
 
 model Post {
@@ -48,20 +48,20 @@ model Post {
   like Int
   text String
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  deletedAt DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
 
 model Comment {
   id Int @id @default(sequence())
-  post Post @relation(fields: [postId], references: [id])
-  postId Int @unique
   author User @relation("commentAuthorId", fields: [authorId], references: [id])
   authorId Int @unique
+  post Post @relation(fields: [postId], references: [id])
+  postId Int @unique
   text String
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  deletedAt DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
 
 model UserActivity {
@@ -72,8 +72,8 @@ model UserActivity {
   activity Activity @relation(fields: [activityId], references: [id])
   activityId Int
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  deletedAt DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
 
 model Activity {
@@ -81,6 +81,6 @@ model Activity {
   activityId UserActivity[]
   activityName String
   createdAt DateTime @default(now())
-  updatedAt DateTime
-  deletedAt DateTime
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }
