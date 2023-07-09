@@ -1,0 +1,86 @@
+// * after create schemas, run `npx prisma migrate dev --name init`;
+// * above code runs `npx prisma generate` under the hood by default;
+// ! .env file should belong to root directory
+// * When the command does not work, check the privious migration file and directry change;
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int @id @default(sequence())
+  firstName   String @db.String(25)
+  lastName    String @db.String(25)
+  email       String @unique
+  password    String @db.String(25)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  deletedAt   DateTime
+  followeeId  Follow[] @relation("followeeId")
+  followingId   Follow[] @relation("followingId")
+  postAuthorId  Post[] @relation("postAuthorId")
+  commentAuthorId   Comment[] @relation("commentAuthorId")
+}
+
+model Follow {
+  id Int @id @default(sequence())
+  followee User @relation("followeeId", fields: [followeeId], references: [id])
+  followeeId Int @unique
+  following User @relation("followingId", fields: [followingId], references: [id])
+  followingId Int @unique
+  status Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  deletedAt DateTime
+}
+
+model Post {
+  id Int @id @default(sequence())
+  postId Comment[]
+  author User @relation("postAuthorId", fields: [authorId], references: [id])
+  authorId Int @unique
+  imgUrl String
+  like Int
+  text String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  deletedAt DateTime
+}
+
+model Comment {
+  id Int @id @default(sequence())
+  post Post @relation(fields: [postId], references: [id])
+  postId Int @unique
+  author User @relation("commentAuthorId", fields: [authorId], references: [id])
+  authorId Int @unique
+  text String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  deletedAt DateTime
+}
+
+model UserActivity {
+  id Int @id @default(sequence())
+  startedAt DateTime @default(now())
+  finishedAt DateTime
+  breakInMin Int
+  activity Activity @relation(fields: [activityId], references: [id])
+  activityId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  deletedAt DateTime
+}
+
+model Activity {
+  id Int @id @default(sequence())
+  activityId UserActivity[]
+  activityName String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  deletedAt DateTime
+}
