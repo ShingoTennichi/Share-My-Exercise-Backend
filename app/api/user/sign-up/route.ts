@@ -40,7 +40,7 @@ export async function POST(request: Request, response: Response): Promise<Respon
   } catch (error) {
     return new Response(JSON.stringify({data: {
       status: "Error",
-      message: `Error: ${error}`,
+      message: `${error}`,
       result: {}
     }}))
   };
