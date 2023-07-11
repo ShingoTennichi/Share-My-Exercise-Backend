@@ -3,6 +3,9 @@
 // ! .env file should belong to root directory
 // * When the command does not work, check the privious migration file and directry change;
 
+// * commend for updating schema: npx prisma db push
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,14 +28,15 @@ model User {
   followingId   Follow[] @relation("followingId")
   postAuthorId  Post[] @relation("postAuthorId")
   commentAuthorId   Comment[] @relation("commentAuthorId")
+  UserActivityId UserActivity[] @relation("UserActivityId")
 }
 
 model Follow {
   id Int @id @default(sequence())
   followee User @relation("followeeId", fields: [followeeId], references: [id])
-  followeeId Int @unique
+  followeeId Int
   following User @relation("followingId", fields: [followingId], references: [id])
-  followingId Int @unique
+  followingId Int
   status Boolean
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -43,7 +47,7 @@ model Post {
   id Int @id @default(sequence())
   postId Comment[]
   author User @relation("postAuthorId", fields: [authorId], references: [id])
-  authorId Int @unique
+  authorId Int
   imgUrl String
   like Int
   text String
@@ -55,9 +59,9 @@ model Post {
 model Comment {
   id Int @id @default(sequence())
   author User @relation("commentAuthorId", fields: [authorId], references: [id])
-  authorId Int @unique
+  authorId Int
   post Post @relation(fields: [postId], references: [id])
-  postId Int @unique
+  postId Int
   text String
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -66,11 +70,13 @@ model Comment {
 
 model UserActivity {
   id Int @id @default(sequence())
-  startedAt DateTime @default(now())
-  finishedAt DateTime
-  breakInMin Int
+  author User @relation("UserActivityId", fields: [authorId], references: [id])
+  authorId Int
   activity Activity @relation(fields: [activityId], references: [id])
   activityId Int
+  startedAt DateTime @default(now())
+  finishedAt DateTime
+  duration Int
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
@@ -79,7 +85,7 @@ model UserActivity {
 model Activity {
   id Int @id @default(sequence())
   activityId UserActivity[]
-  activityName String
+  name String
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
