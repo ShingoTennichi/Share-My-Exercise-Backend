@@ -3,39 +3,45 @@ import { SignInInfo } from "@/types/types";
 import bcrypt from "bcrypt";
 
 export async function POST(request: Request, response: Response) {
+  // parse json object
   const { email, password }: SignInInfo = await request.json();
+
   const prisma: globalPrisma = globalPrisma;
   try {
+    // check if user exists
     const data = await prisma.user.findUnique({
       where: {
-        email: email
-      }
-    })
+        email: email,
+      },
+    });
+    if (!data) throw new Error("The user does not exists");
 
-    if(!data) throw new Error("The user does not exists");
-    if(await bcrypt.compare(password, data.password)) {
-      return new Response(JSON.stringify({
-        data: {
-          status: "Success",
-          message: "Successfully processed",
-          result: {
-            userId: data.id
-          }
-        }
-      }))
+    // compare password and unhashed password
+    if (await bcrypt.compare(password, data.password)) {
+      // if match return user data
+      return new Response(
+        JSON.stringify({
+          data: {
+            status: "Success",
+            message: "Successfully processed",
+            result: {
+              id: data.id,
+            },
+          },
+        })
+      );
     } else {
-      throw new Error("Password did not match")
+      throw new Error("Password did not match");
     }
-  } catch(error) {
-      return new Response(JSON.stringify({
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
         data: {
           status: "Error",
           message: `${error}`,
-          result: {}
-        }
-      }))
+          result: {},
+        },
+      })
+    );
   }
-
-
 }
-globalPrisma
