@@ -7,9 +7,9 @@ export type SignUpInfo = {
 };
 
 export type SignInInfo = {
-  email: string,
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 export type Follow = {
   followeeId: number;
@@ -43,5 +43,10 @@ export type UserActivity = {
 };
 
 export type Activity = {
-  activityName: string;
+  authorId: number;
+  activityId: number;
+  name: string;
+  startedAt: Date;
+  finishedAt: Date;
+  duration: number;
 };
