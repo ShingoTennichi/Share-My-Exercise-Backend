@@ -74,7 +74,7 @@ model UserActivity {
   authorId Int
   activity Activity @relation(fields: [activityId], references: [id])
   activityId Int
-  startedAt DateTime @default(now())
+  startedAt String
   finishedAt DateTime
   duration Int
   createdAt DateTime @default(now())
