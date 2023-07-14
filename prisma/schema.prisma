@@ -48,9 +48,9 @@ model Post {
   postId Comment[]
   author User @relation("postAuthorId", fields: [authorId], references: [id])
   authorId Int
-  imgUrl String
-  like Int
-  text String
+  imgUrl String?
+  like Int @default(0)
+  text String?
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
@@ -75,7 +75,7 @@ model UserActivity {
   activity Activity @relation(fields: [activityId], references: [id])
   activityId Int
   startedAt String
-  finishedAt DateTime
+  finishedAt String
   duration Int
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
