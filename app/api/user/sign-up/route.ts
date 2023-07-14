@@ -4,22 +4,25 @@ import bcrypt from "bcrypt";
 
 
 export async function POST(request: Request, response: Response): Promise<Response> {
-  console.log("Process Begin");
-  const {firstName, lastName, email, password}: SignUpInfo = await request.json();
-  const prisma: globalPrisma = globalPrisma;
-  // need to verify user input
   try {
+    // get request body
+    const {firstName, lastName, email, password}: SignUpInfo = await request.json();
+    const prisma: globalPrisma = globalPrisma;
+
+    // need to verify user input
     const check = await prisma.user.findUnique({
       where: {
         email: email
       }
     })
 
-    if(check) throw new Error("The user exists already");
+    if(check) throw new Error("The Email is already registered");
 
+    // hash password before storing
     const saltRound = 10;
     const hashedPassword = await bcrypt.hash(password, saltRound);
 
+    // save user data to database
     const data = await prisma.user.create({
       data: {
         firstName: firstName,

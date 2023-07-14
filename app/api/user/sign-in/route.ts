@@ -3,12 +3,12 @@ import { SignInInfo } from "@/types/types";
 import bcrypt from "bcrypt";
 
 export async function POST(request: Request, response: Response) {
-  // parse json object
-  const { email, password }: SignInInfo = await request.json();
-
-  const prisma: globalPrisma = globalPrisma;
   try {
-    // check if user exists
+    // get request body
+    const { email, password }: SignInInfo = await request.json();
+    const prisma: globalPrisma = globalPrisma;
+
+    // check if the email already exists in database
     const data = await prisma.user.findUnique({
       where: {
         email: email,
