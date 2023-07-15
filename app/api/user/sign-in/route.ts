@@ -31,7 +31,7 @@ export async function POST(request: Request, response: Response) {
         })
       );
     } else {
-      throw new Error("Password did not match");
+      throw new Error("Make sure email and password are correct");
     }
   } catch (error) {
     return new Response(
