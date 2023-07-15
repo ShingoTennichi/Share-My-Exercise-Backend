@@ -1,6 +1,6 @@
 import { globalPrisma } from "@/prisma/globalPrismaClient";
 
-export async function POST(response: Response, request: Request) {
+export async function POST(request: Request, response: Response) {
   try {
     // get request body
     const { id } = await response.json();
