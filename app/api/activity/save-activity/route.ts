@@ -1,10 +1,10 @@
 import { globalPrisma } from "@/prisma/globalPrismaClient";
 import { Activity } from "@/types/types";
 
-export async function POST(response: Response, request: Request) {
+export async function POST(request: Request, response: Response) {
   try {
     // get request body
-    const { authorId, activityId, startedAt, finishedAt, duration }: Activity = await response.json();
+    const { authorId, activityId, startedAt, finishedAt, duration }: Activity = await request.json();
     const prisma: globalPrisma = globalPrisma;
 
     // save user activity data to database

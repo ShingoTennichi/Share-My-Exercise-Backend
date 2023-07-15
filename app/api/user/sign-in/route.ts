@@ -14,7 +14,7 @@ export async function POST(request: Request, response: Response) {
         email: email,
       },
     });
-    if (!data) throw new Error("The user does not exists");
+    if (!data) throw new Error("Make sure email and password are correct");
 
     // compare password and unhashed password
     if (await bcrypt.compare(password, data.password)) {
