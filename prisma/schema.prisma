@@ -24,6 +24,8 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+
+  // relations
   followeeId  Follow[] @relation("followeeId")
   followingId   Follow[] @relation("followingId")
   postAuthorId  Post[] @relation("postAuthorId")
@@ -33,20 +35,21 @@ model User {
 
 model Follow {
   id Int @id @default(sequence())
-  followee User @relation("followeeId", fields: [followeeId], references: [id])
   followeeId Int
-  following User @relation("followingId", fields: [followingId], references: [id])
   followingId Int
   status Boolean
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+
+  // relations
+  followee User @relation("followeeId", fields: [followeeId], references: [id])
+  following User @relation("followingId", fields: [followingId], references: [id])
 }
 
 model Post {
   id Int @id @default(sequence())
   postId Comment[]
-  author User @relation("postAuthorId", fields: [authorId], references: [id])
   authorId Int
   imgUrl String?
   like Int @default(0)
@@ -54,25 +57,28 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+
+  // relations
+  author User @relation("postAuthorId", fields: [authorId], references: [id])
 }
 
 model Comment {
   id Int @id @default(sequence())
-  author User @relation("commentAuthorId", fields: [authorId], references: [id])
   authorId Int
-  post Post @relation(fields: [postId], references: [id])
   postId Int
   text String
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+
+  // relations
+  author User @relation("commentAuthorId", fields: [authorId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
 }
 
 model UserActivity {
   id Int @id @default(sequence())
-  author User @relation("UserActivityId", fields: [authorId], references: [id])
   authorId Int
-  activity Activity @relation(fields: [activityId], references: [id])
   activityId Int
   startedAt String
   finishedAt String
@@ -80,6 +86,10 @@ model UserActivity {
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+
+  // relations
+  author User @relation("UserActivityId", fields: [authorId], references: [id])
+  activity Activity @relation(fields: [activityId], references: [id])
 }
 
 model Activity {
