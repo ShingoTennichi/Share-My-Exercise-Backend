@@ -1,9 +1,10 @@
 import { globalPrisma } from "@/prisma/globalPrismaClient";
 import { createResponse } from "@/util/createResponse";
+import { UpdateLIKE } from "@/types/types";
 
 export async function PUT(request: Request, response: Response) {
   try {
-    const { postId, like } = await request.json();
+    const { id: postId, like }: UpdateLIKE = await request.json();
 
     const data = await globalPrisma.post.update({
       where: {
@@ -13,9 +14,9 @@ export async function PUT(request: Request, response: Response) {
         like: like,
       },
     });
-    console.log(data);
+
     return createResponse("success", data);
   } catch (e) {
-    return createResponse("error")
+    return createResponse("error");
   }
 }

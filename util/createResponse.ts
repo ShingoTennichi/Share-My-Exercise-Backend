@@ -1,6 +1,6 @@
 type Status = "success" | "error";
 
-export function createResponse(status: Status, data: {} = {}): Response {
+export function createResponse(status: Status, data: any = {}): Response {
   if(status === "success") {
     return new Response(
       JSON.stringify({

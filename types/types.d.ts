@@ -23,3 +23,10 @@ export type NewPost = {
   imgUrl: string;
   text: string;
 };
+
+export type UserId = { id: number };
+
+export type UpdateLIKE = {
+  id: number;
+  like: number;
+};
