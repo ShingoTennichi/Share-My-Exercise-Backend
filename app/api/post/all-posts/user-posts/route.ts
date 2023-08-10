@@ -22,8 +22,29 @@ export async function POST(request: Request, response: Response) {
       },
     });
 
-    return createResponse("success", data);
+    if (!data) throw Error();
+
+    const userPosts: userPosts = {
+      id: data.id,
+      author: `${data.firstName} ${data.lastName}`,
+      userPosts: data.postAuthorId.reverse(),
+    };
+
+    return createResponse("success", userPosts);
   } catch (e) {
     return createResponse("error");
   }
 }
+
+type userPosts = {
+  id: number;
+  author: string;
+  userPosts: userPost[];
+};
+
+type userPost = {
+  imgUrl: string | null;
+  like: number;
+  text: string | null;
+  createdAt: Date;
+};
